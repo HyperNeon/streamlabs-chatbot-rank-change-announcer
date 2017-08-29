@@ -1,0 +1,45 @@
+{
+	"output_file": "RCASettings.json",
+	"rank_up_message": {
+		"type": "textbox",
+		"value": "KAPOW Congrats to {0} for LEVELING UP to {1} KAPOW",
+		"label": "Rank Up Message",
+		"tooltip": "The chat message to be written each time a user ranks up.\r\n\r\n{0} is the user name.\r\n{1} is the rank title.",
+		"group": "Chat Messages"	
+	},
+	"rank_down_message": {
+		"type": "textbox",
+		"value": "FailFish {0} is slacking and leveled down to {1} FailFish",
+		"label": "Rank Down Message",
+		"tooltip": "The chat message to be written each time a user ranks down.\r\n\r\n{0} is the user name.\r\n{1} is the rank title.",
+		"group": "Chat Messages"	
+	},
+	"announcer_timer": {
+		"type": "numberbox",
+		"label": "Check Ranks Every X Seconds",
+		"value": 30,
+		"tooltip": "The amount of seconds between each check of user ranks. Bigger reduces computations, but results in a lag.\r\nMinimum value is 1 second.",
+		"group": "Announcer Settings"
+	},
+	"announce_rank_ups": {
+		"type": "checkbox",
+		"value": true,
+		"label": "Enable Rank Up",
+		"tooltip": "Display the Rank Up Message in chat whenever a user ranks up",
+		"group": "Announcer Settings"
+	},
+	"announce_rank_downs": {
+		"type": "checkbox",
+		"value": false,
+		"label": "Enable Rank Down",
+		"tooltip": "Display the Rank Down Message in chat whenever a user ranks down",
+		"group": "Announcer Settings"
+	},
+	"announce_lurkers": {
+		"type": "checkbox",
+		"value": false,
+		"label": "Enable For Lurkers",
+		"tooltip": "Display the rank change messages for viewers who are not active in chat.\r\n\r\nIf disabled, will only send messages for users who have chatted in the last 15 minutes",
+		"group": "Announcer Settings"
+	}
+}
