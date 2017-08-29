@@ -21,6 +21,14 @@
 		"tooltip": "The amount of seconds between each check of user ranks. Bigger reduces computations, but results in a lag.\r\nMinimum value is 1 second.",
 		"group": "Announcer Settings"
 	},
+	"rank_system": {
+		"type": "dropdown",
+		"label": "Which rank system is in use?",
+		"value": "Points",
+		"tooltip": "Set this the same as your rank system in the Currency Settings in Ankhbot",
+		"items": ["Points","Hours"],
+		"group": "Announcer Settings"
+	},
 	"announce_rank_ups": {
 		"type": "checkbox",
 		"value": true,

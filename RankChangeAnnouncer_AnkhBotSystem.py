@@ -33,6 +33,7 @@ class Settings(object):
                 self.rank_up_message = "KAPOW Congrats to {0} for LEVELING UP to {1} KAPOW"
                 self.rank_down_message = "FailFish {0} is slacking and leveled down to {1} FailFish"
                 self.announcer_timer = 30
+                self.rank_system = "Points"
                 self.announce_rank_ups = true
                 self.announce_rank_downs = false
                 self.announce_lurkers = false
@@ -95,7 +96,8 @@ def CalculateRankChanges(new_ranks, old_ranks):
         # Add rank to list if new rank title is different from old title
         if new_rank['rank'] != old_rank['rank']:
             # Leveling up if new points are higher than old points
-            if new_rank['points'] >= old_rank['points']:
+            # If we're using an Hours based system then we'll always level up
+            if ScriptSettings.rank_system == "Hours" or new_rank['points'] >= old_rank['points']:
                 rank_changes[name] = {'rank': new_rank['rank'], 'level_up': True}
             else:
                 rank_changes[name] = {'rank': new_rank['rank'], 'level_up': False}
@@ -177,7 +179,7 @@ def Tick():
         # Globals
         global LastRunTime
         global LastRankList
-        
+                
         new_ranks = GetRankList()
         rank_changes = CalculateRankChanges(new_ranks, LastRankList)
         
