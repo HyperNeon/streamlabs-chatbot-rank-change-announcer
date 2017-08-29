@@ -34,9 +34,9 @@ class Settings(object):
                 self.rank_down_message = "FailFish {0} is slacking and leveled down to {1} FailFish"
                 self.announcer_timer = 30
                 self.rank_system = "Points"
-                self.announce_rank_ups = true
-                self.announce_rank_downs = false
-                self.announce_lurkers = false
+                self.announce_rank_ups = True
+                self.announce_rank_downs = False
+                self.announce_lurkers = False
 
     def reload(self, jsondata):
         """ Reload settings from AnkhBot user interface by given json data. """
