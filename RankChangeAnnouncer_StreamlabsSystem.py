@@ -12,7 +12,7 @@ import time
 ScriptName = "Rank Change Announcer"
 Website = "https://www.github.com/hyperneon"
 Creator = "GameTangent"
-Version = "1.0.0"
+Version = "1.2.0"
 Description = "Announce in chat when a user changes ranks"
 
 #---------------------------------------
@@ -34,12 +34,13 @@ class Settings(object):
                 self.rank_down_message = "FailFish {0} is slacking and leveled down to {1} FailFish"
                 self.announcer_timer = 30
                 self.rank_system = "Points"
+                self.use_streamlabs_currency = False
                 self.announce_rank_ups = True
                 self.announce_rank_downs = False
                 self.announce_lurkers = False
 
     def reload(self, jsondata):
-        """ Reload settings from AnkhBot user interface by given json data. """
+        """ Reload settings from Chatbot user interface by given json data. """
         self.__dict__ = json.loads(jsondata, encoding="utf-8")
         return
 
@@ -70,7 +71,7 @@ def GetRankList():
     else:
         viewers = Parent.GetActiveUsers()
         
-    ranks = Parent.GetRanksAll(viewers)
+    ranks = BuildRankHash(viewers)
     points = Parent.GetPointsAll(viewers)
     
     rank_list = {}   
@@ -78,6 +79,23 @@ def GetRankList():
         rank_list[name] = {'rank': rank, 'points': points[name]}
     
     return rank_list
+    
+def BuildRankHash(viewers):
+    """
+        Since the introduction of the StreamLabs Chatbot, GetRanksAll no longer works if the bot is set
+        to use Streamlabs Extension Currency. As a workaround, we can build the PythonDictionary ourselves one by one
+        at the cost of performance. We only need to do this if use_streamlabs_currency == true.
+    """
+    if ScriptSettings.use_streamlabs_currency:
+        # Build the rank dictionary
+        ranks = {}
+        for name in viewers:
+            ranks[name] = Parent.GetRank(name)
+    else:
+        # The original GetRanksAll method still works with legacy currency so just return it
+        ranks = Parent.GetRanksAll(viewers)
+    
+    return ranks
     
 def CalculateRankChanges(new_ranks, old_ranks):
     """
