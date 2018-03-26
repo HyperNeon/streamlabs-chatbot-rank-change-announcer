@@ -25,7 +25,7 @@
 		"type": "checkbox",
 		"value": false,
 		"label": "Use Streamlabs Extension Currency",
-		"tooltip": "Check this if you are using the Streamlabs Extension Currency for the rest of the bot.\r\nNOTE: This is a temporary fix and will negatively impact performance.\r\nStreamers with a lot of concurrent viewers should increase the announcer timer if using this feature",
+		"tooltip": "[TWITCH ONLY] Check this if you are using the Streamlabs Extension Currency for the rest of the bot.\r\nNOTE: This is a temporary fix and will negatively impact performance.\r\nStreamers with a lot of concurrent viewers should increase the announcer timer if using this feature",
 		"group": "Announcer Settings"
 	},
 	"rank_system": {

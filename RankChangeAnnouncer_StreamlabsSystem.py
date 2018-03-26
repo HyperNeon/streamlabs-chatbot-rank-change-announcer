@@ -12,7 +12,7 @@ import time
 ScriptName = "Rank Change Announcer"
 Website = "https://www.github.com/hyperneon"
 Creator = "GameTangent"
-Version = "1.2.0"
+Version = "1.3.0"
 Description = "Announce in chat when a user changes ranks"
 
 #---------------------------------------
@@ -73,10 +73,15 @@ def GetRankList():
         
     ranks = BuildRankHash(viewers)
     points = Parent.GetPointsAll(viewers)
+    names = Parent.GetDisplayNames(viewers)
     
     rank_list = {}   
-    for name,rank in ranks.items():
-        rank_list[name] = {'rank': rank, 'points': points[name]}
+    for id,name in names.items():
+        try:
+            rank_list[name] = {'rank': ranks[id], 'points': points[id]}
+        except:
+            Parent.Log(ScriptName, "Failed to get Rank or Points for User: " + name + "  Please check if the user exists in the Users tab")
+            continue
     
     return rank_list
     

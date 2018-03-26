@@ -2,7 +2,7 @@
 A Python script for use in [Streamlabs Chatbots's](https://streamlabs.com/chatbot) built-in scripting feature which announces in chat when a user changes ranks.
 You can check out the functionality on [Github](https://github.com/HyperNeon/ankhbot-rank-change-announcer)
 
-This script will monitor all Twitch users currently connected to chat and make an announcement in Twitch chat whenever a user ranks up or ranks down. The script allows you to customize:
+This script will monitor all Twitch/YouTube/Mixer users currently connected to chat and make an announcement in chat whenever a user ranks up or ranks down. The script allows you to customize:
 * The message sent when a user ranks up
 * The message sent when a user ranks down
 * How often the script should run
