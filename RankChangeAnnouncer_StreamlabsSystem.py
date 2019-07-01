@@ -5,6 +5,7 @@ import os
 import codecs
 import json
 import time
+import threading
 
 #---------------------------------------
 #	[Required]	Script Information
@@ -12,7 +13,7 @@ import time
 ScriptName = "Rank Change Announcer"
 Website = "https://www.github.com/hyperneon"
 Creator = "GameTangent"
-Version = "1.3.0"
+Version = "1.4.0"
 Description = "Announce in chat when a user changes ranks"
 
 #---------------------------------------
@@ -58,6 +59,20 @@ class Settings(object):
 #---------------------------------------
 #	Functions
 #---------------------------------------
+def ProcessAndSendAlerts(new_ranks, last_ranks):
+    """ Processes the ranks in a thread """
+    rank_changes = CalculateRankChanges(new_ranks, last_ranks)
+        
+    # Iterate over each rank_change and send chat messages if enabled
+    for name, rank_details in rank_changes.items():
+        if rank_details['level_up']:
+            if ScriptSettings.announce_rank_ups:
+                Parent.SendTwitchMessage(ScriptSettings.rank_up_message.format(name, rank_details['rank']))
+        else:
+            if ScriptSettings.announce_rank_downs:
+                Parent.SendTwitchMessage(ScriptSettings.rank_down_message.format(name, rank_details['rank']))
+    return
+
 def GetRankList():
     """
         GetRankList is a function that retrieves the full list of viewers and then looks up their
@@ -98,6 +113,7 @@ def BuildRankHash(viewers):
             ranks[name] = Parent.GetRank(name)
     else:
         # The original GetRanksAll method still works with legacy currency so just return it
+
         ranks = Parent.GetRanksAll(viewers)
     
     return ranks
@@ -204,16 +220,8 @@ def Tick():
         global LastRankList
                 
         new_ranks = GetRankList()
-        rank_changes = CalculateRankChanges(new_ranks, LastRankList)
         
-        # Iterate over each rank_change and send chat messages if enabled
-        for name, rank_details in rank_changes.items():
-            if rank_details['level_up']:
-                if ScriptSettings.announce_rank_ups:
-                    Parent.SendTwitchMessage(ScriptSettings.rank_up_message.format(name, rank_details['rank']))
-            else:
-                if ScriptSettings.announce_rank_downs:
-                    Parent.SendTwitchMessage(ScriptSettings.rank_down_message.format(name, rank_details['rank']))
+        threading.Thread(target=ProcessAndSendAlerts, args=(new_ranks, LastRankList)).start()
 
         # Save new rank list to LastRankList for next time
         LastRankList = new_ranks
