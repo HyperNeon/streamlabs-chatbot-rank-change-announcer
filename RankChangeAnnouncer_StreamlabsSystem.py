@@ -13,7 +13,7 @@ import threading
 ScriptName = "Rank Change Announcer"
 Website = "https://www.github.com/hyperneon"
 Creator = "GameTangent"
-Version = "1.4.1"
+Version = "1.4.2"
 Description = "Announce in chat when a user changes ranks"
 
 #---------------------------------------
@@ -59,10 +59,16 @@ class Settings(object):
 #---------------------------------------
 #	Functions
 #---------------------------------------
-def ProcessAndSendAlerts(new_ranks, last_ranks):
+def ProcessAndSendAlerts():
     """ Processes the ranks in a thread """
-    rank_changes = CalculateRankChanges(new_ranks, last_ranks)
-        
+    # Globals
+    global LastRunTime
+    global LastRankList
+    
+    new_ranks = GetRankList()
+    
+    rank_changes = CalculateRankChanges(new_ranks, LastRankList)
+    
     # Iterate over each rank_change and send chat messages if enabled
     for name, rank_details in rank_changes.items():
         if rank_details['level_up']:
@@ -71,6 +77,12 @@ def ProcessAndSendAlerts(new_ranks, last_ranks):
         else:
             if ScriptSettings.announce_rank_downs:
                 Parent.SendTwitchMessage(ScriptSettings.rank_down_message.format(name, rank_details['rank']))
+    
+    # Save new rank list to LastRankList for next time
+    LastRankList = new_ranks
+    # Set new timestamp
+    LastRunTime = time.time()
+    
     return
 
 def GetRankList():
@@ -94,7 +106,7 @@ def GetRankList():
         try:
             rank_list[Parent.GetDisplayName(id)] = {'rank': ranks[id], 'points': points[id]}
         except:
-            Parent.Log(ScriptName, "Failed to get Rank or Points for User: " + name + "  Please check if the user exists in the Users tab")
+            Parent.Log(ScriptName, "Failed to get Rank or Points for UserID: " + id + "  Please check if the user exists in the Users tab")
             continue
     
     return rank_list
@@ -214,16 +226,5 @@ def Tick():
     """
     # Only run check if it's been more than the announcer_timer limit since the LastRunTime
     if time.time() - LastRunTime >= ScriptSettings.announcer_timer:
-        # Globals
-        global LastRunTime
-        global LastRankList
-                
-        new_ranks = GetRankList()
-        
-        threading.Thread(target=ProcessAndSendAlerts, args=(new_ranks, LastRankList)).start()
-
-        # Save new rank list to LastRankList for next time
-        LastRankList = new_ranks
-        # Set new timestamp
-        LastRunTime = time.time()
+        threading.Thread(target=ProcessAndSendAlerts).start()
     return
